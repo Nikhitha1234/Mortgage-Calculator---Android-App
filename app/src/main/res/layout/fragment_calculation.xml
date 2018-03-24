@@ -1,0 +1,299 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.group7.mortgage_calculator_lab2.CalculationFragment"
+        >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:ignore="Orientation"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/black"
+        >
+        // Layout for part 1
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="15dp">
+
+            // Prop Heading
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/propHdText"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:layout_width="match_parent"
+                    android:text="@string/propHdText"
+                    android:textSize="30dp" />
+            </LinearLayout>
+
+            // Prop Type
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/propTypeText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/propType"
+                    android:textSize="15dp"/>
+                <Spinner
+                    android:id="@+id/propType_spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:background="@drawable/drpdwn_border"/>
+            </LinearLayout>
+
+            // Layout for Street Address
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/streetText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/streetText"
+                    android:textSize="15dp"/>
+                <EditText
+                    android:id="@+id/street"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/border"/>
+            </LinearLayout>
+
+            // Layout for City
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/cityText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/cityText"
+                    android:textSize="15dp"/>
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/border"
+                    />
+            </LinearLayout>
+
+            // Layout for State
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/stateText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/stateText"
+                    android:textSize="15dp"/>
+                <Spinner
+                    android:id="@+id/state_spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/drpdwn_border"/>
+            </LinearLayout>
+
+            // Layout for Zipcode
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/zipcodeText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/zipcodeText"
+                    android:textSize="15dp"/>
+                <EditText
+                    android:id="@+id/zipcode"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:inputType="textMultiLine"
+                    android:background="@drawable/border"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        // Layout for 2nd Part
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="Orientation"
+            android:layout_marginTop="15dp">
+            <TextView
+                android:id="@+id/loanHdText"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:textColor="@android:color/white"
+                android:text="@string/loanHdText"
+                android:textSize="30dp"
+                android:layout_marginTop="12dp"/>
+
+
+            // Layout for Prop Price
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/propPriceText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/propPriceText"
+                    android:textSize="15dp" />
+                <EditText
+                    android:id="@+id/propPrice"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:digits="0123456789."
+                    android:inputType="numberDecimal"
+                    android:background="@drawable/border"
+                    />
+            </LinearLayout>
+
+            // Layout for Down Payment
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/downPmtText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/downPmtText"
+                    android:textSize="15dp"/>
+                <EditText
+                    android:id="@+id/downPmt"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:digits="0123456789."
+                    android:inputType="numberDecimal"
+                    android:background="@drawable/border"
+                    />
+            </LinearLayout>
+
+            // Layout for APR
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/aprText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/aprText"
+                    android:textSize="15dp"/>
+                <EditText
+                    android:id="@+id/apr"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789."
+                    android:background="@drawable/border"
+                    />
+            </LinearLayout>
+
+            //Layout for Radio Button - Terms
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/termsText"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="@string/termsText"
+                    android:textSize="15dp"/>
+                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/rg_terms">
+                    <RadioButton android:id="@+id/radio_fifteen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fifteen"
+                        android:textColor="@color/white"
+                        android:buttonTint="@color/white"/>
+                    <RadioButton android:id="@+id/radio_thirty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/thirty"
+                        android:textColor="@color/white"
+                        android:buttonTint="@color/white"/>
+                </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/button_new"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/new_mort" />
+            <Button
+                android:id="@+id/button_save"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/save_data" />
+            <Button
+                android:id="@+id/button_calc"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/calculate" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:id="@+id/monthlyTxt"
+                android:textColor="@color/white"
+                android:text="@string/monthlyText"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/monthly"
+                android:textColor="@color/white"
+                android:text="@string/monthly"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

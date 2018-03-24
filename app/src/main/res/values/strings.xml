@@ -1,0 +1,88 @@
+<resources>
+    <string name="app_name">Mortgage Calculator</string>
+    <string name="tab_text_1">Calculation</string>
+    <string name="tab_text_2">Maps</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="propType">Property Type</string>
+    <string-array name="proptype_array">
+        <item>Home</item>
+        <item>Townhouse</item>
+        <item>Condo</item>
+    </string-array>
+    <string name="propTypeName">Property Type :</string>
+    <string name="streetText">Street Address :</string>
+    <string name="cityText">City :</string>
+    <string name="stateText">State :</string>
+    <string-array name="state_array">
+        <item>AL</item>
+        <item>AK</item>
+        <item>AR</item>
+        <item>AZ</item>
+        <item>CA</item>
+        <item>CO</item>
+        <item>CT</item>
+        <item>DC</item>
+        <item>DE</item>
+        <item>FL</item>
+        <item>GA</item>
+        <item>HI</item>
+        <item>IA</item>
+        <item>ID</item>
+        <item>IL</item>
+        <item>IN</item>
+        <item>KS</item>
+        <item>KY</item>
+        <item>LA</item>
+        <item>MA</item>
+        <item>MD</item>
+        <item>ME</item>
+        <item>MI</item>
+        <item>MN</item>
+        <item>MO</item>
+        <item>MS</item>
+        <item>MT</item>
+        <item>NC</item>
+        <item>NE</item>
+        <item>NH</item>
+        <item>NJ</item>
+        <item>NM</item>
+        <item>NV</item>
+        <item>NY</item>
+        <item>ND</item>
+        <item>OH</item>
+        <item>OK</item>
+        <item>OR</item>
+        <item>PA</item>
+        <item>RI</item>
+        <item>SC</item>
+        <item>SD</item>
+        <item>TN</item>
+        <item>TX</item>
+        <item>UT</item>
+        <item>VT</item>
+        <item>VA</item>
+        <item>WA</item>
+        <item>WI</item>
+        <item>WV</item>
+        <item>WY</item>
+    </string-array>
+    <string name="zipcodeText">Zipcode :</string>
+    <string name="propPriceText">Property Price :</string>
+    <string name="downPmtText">Down Payment :</string>
+    <string name="aprText">APR :</string>
+    <string name="termsText">Terms :</string>
+    <string name="fifteen">15</string>
+    <string name="thirty">30</string>
+    <string name="propHdText">Property Info</string>
+    <string name="loanHdText">Loan Info</string>
+    <string name="new_mort">New</string>
+    <string name="save_data">Save</string>
+    <string name="calculate">Calculate</string>
+    <string name="monthlyText">Your monthly payment is : </string>
+    <string name="monthly"> Waiting for Input ...</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
