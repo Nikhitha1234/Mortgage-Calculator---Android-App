@@ -113,6 +113,7 @@ public class CalculationFragment extends Fragment {
                 else
                     Log.v("nrow", "Not Inserted");
 
+
                 // Code here executes on main thread after user presses button
             }
         });

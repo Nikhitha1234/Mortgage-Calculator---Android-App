@@ -16,6 +16,7 @@ public class SaveDataHelper extends SQLiteOpenHelper{
     public SaveDataHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(sdcontract.getSqlCreateEntries());
     }
@@ -25,7 +26,9 @@ public class SaveDataHelper extends SQLiteOpenHelper{
         db.execSQL(sdcontract.getSqlDeleteEntries());
         onCreate(db);
     }
+
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
+
 }
