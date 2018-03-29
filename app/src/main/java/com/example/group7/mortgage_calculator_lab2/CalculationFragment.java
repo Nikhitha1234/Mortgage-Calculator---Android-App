@@ -6,6 +6,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,42 +33,51 @@ public class CalculationFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public ViewPager mViewPager;
+    Fragment mapsFragment;
+    FragmentStatePagerAdapter pagerAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         calcView = inflater.inflate(R.layout.fragment_calculation, container, false);
 
+        mViewPager = (ViewPager) container;
+        pagerAdapter =  (FragmentStatePagerAdapter) mViewPager.getAdapter();
+
+        //use mapsFragment to call getLocationfromAddress to validate address
+        mapsFragment =  pagerAdapter.getItem(1);
+
         final Spinner spinner = (Spinner) calcView.findViewById(R.id.propType_spinner);
-// Create an ArrayAdapter using the string array and a default spinner layout
+        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
                 R.array.proptype_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
+        // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
+        // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
 
         final Spinner spinner1 = (Spinner) calcView.findViewById(R.id.state_spinner);
-// Create an ArrayAdapter using the string array and a default spinner layout
+        // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this.getContext(),
                 R.array.state_array, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
+        // Specify the layout to use when the list of choices appears
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
+        // Apply the adapter to the spinner
         spinner1.setAdapter(adapter1);
 
 
-        final Button button_new = (Button) calcView.findViewById(R.id.button_new);
+        final Button button_new =  calcView.findViewById(R.id.button_new);
         button_new.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                final EditText et_street = (EditText) calcView.findViewById(R.id.street);
-                final EditText et_city = (EditText) calcView.findViewById(R.id.city);
-                final EditText et_zipcode= (EditText) calcView.findViewById(R.id.zipcode);
-                final EditText et_propPrice = (EditText) calcView.findViewById(R.id.propPrice);
-                final EditText et_downpmt = (EditText) calcView.findViewById(R.id.downPmt);
-                final EditText et_apr = (EditText) calcView.findViewById(R.id.apr);
-                final TextView tv_monthly = (TextView) calcView.findViewById(R.id.monthly);
+                final EditText et_street = calcView.findViewById(R.id.street);
+                final EditText et_city = calcView.findViewById(R.id.city);
+                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
+                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
+                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
+                final EditText et_apr = calcView.findViewById(R.id.apr);
+                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
                 et_street.setText("");
                 et_city.setText("");
                 et_zipcode.setText("");
@@ -75,7 +87,7 @@ public class CalculationFragment extends Fragment {
                 spinner.setSelection(0);
                 spinner1.setSelection(0);
                 tv_monthly.setText("");
-                RadioGroup radioGroup_terms = (RadioGroup)calcView.findViewById(R.id.rg_terms);
+                RadioGroup radioGroup_terms = calcView.findViewById(R.id.rg_terms);
                 radioGroup_terms.clearCheck();
 
 
@@ -83,7 +95,7 @@ public class CalculationFragment extends Fragment {
         });
 
 
-        final Button button_save = (Button) calcView.findViewById(R.id.button_save);
+        final Button button_save =  calcView.findViewById(R.id.button_save);
         button_save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -91,12 +103,12 @@ public class CalculationFragment extends Fragment {
                 // Gets the data repository in write mode
                 SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-                final EditText et_street = (EditText) calcView.findViewById(R.id.street);
-                final EditText et_city = (EditText) calcView.findViewById(R.id.city);
+                final EditText et_street =  calcView.findViewById(R.id.street);
+                final EditText et_city = calcView.findViewById(R.id.city);
 
-                final EditText et_apr= (EditText) calcView.findViewById(R.id.apr);
+                final EditText et_apr=  calcView.findViewById(R.id.apr);
 
-// Create a new map of values, where column names are the keys
+                // Create a new map of values, where column names are the keys
                 ContentValues values = new ContentValues();
                 values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPTYPE, spinner.getSelectedItem().toString());
                 values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET, et_street.getText().toString());
@@ -105,29 +117,29 @@ public class CalculationFragment extends Fragment {
                 values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_APR,et_apr.getText().toString());
                 values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
 
-// Insert the new row, returning the primary key value of the new row
+                // Insert the new row, returning the primary key value of the new row
                 long newRowId = db.insert(SaveDataContract.SaveDataEntry.TABLE_NAME, null, values);
 
-                if(newRowId != -1)
+                if(newRowId != -1) {
                     Log.v("row", "Inserted");
+                    pagerAdapter.notifyDataSetChanged();
+                    Log.v("Info", "Maps fragment is notified");
+                }
                 else
-                    Log.v("nrow", "Not Inserted");
+                    Log.v("row", "Not Inserted");
 
-
-                // Code here executes on main thread after user presses button
             }
         });
 
-        final Button button_calc = (Button) calcView.findViewById(R.id.button_calc);
+        final Button button_calc =  calcView.findViewById(R.id.button_calc);
         button_calc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button Calc
 
-
-                final EditText et_propPrice = (EditText) calcView.findViewById(R.id.propPrice);
-                final EditText et_downpmt = (EditText) calcView.findViewById(R.id.downPmt);
-                final EditText et_apr = (EditText) calcView.findViewById(R.id.apr);
-                final TextView tv_monthly = (TextView) calcView.findViewById(R.id.monthly);
+                final EditText et_propPrice =  calcView.findViewById(R.id.propPrice);
+                final EditText et_downpmt =  calcView.findViewById(R.id.downPmt);
+                final EditText et_apr =  calcView.findViewById(R.id.apr);
+                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
 
                 double propPrice = Double.parseDouble(et_propPrice.getText().toString());
                 double dwnPmt = Double.parseDouble(et_downpmt.getText().toString());
@@ -136,7 +148,6 @@ public class CalculationFragment extends Fragment {
                 radioTerms_value = radioTerms_value *12;
                 Log.v("apr",apr+"");
                 Log.v("xxx",Math.pow(1+apr,radioTerms_value) + " ");
-
                 Log.v("thly",radioTerms_value+"");
 
                 loan_amt = propPrice - dwnPmt;
@@ -144,7 +155,6 @@ public class CalculationFragment extends Fragment {
                 monthly_amt = (loan_amt)*((apr* (Math.pow(1+apr,radioTerms_value)))/(Math.pow(1+apr,radioTerms_value)-1));
                 Log.v("monthly",monthly_amt+"");
                 tv_monthly.setText(monthly_amt+"");
-
 
             }
         });

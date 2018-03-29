@@ -6,13 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,9 +29,11 @@ import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
     SupportMapFragment fragment;
-
+    SaveDataHelper mDbHelper;
+    String curPropId;
+    Marker curMarker;
+    private GoogleMap mMap;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,73 +65,79 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap.setMinZoomPreference(6.0f);
         mMap.setMaxZoomPreference(14.0f);
 
-        SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
+        mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
         // Gets the data repository in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        db.delete(SaveDataContract.SaveDataEntry.TABLE_NAME, SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY + "=?", new String[]{""});
 
-        ArrayList<String> cities = new ArrayList<String>();
-        Cursor cursorProperties = db.rawQuery("SELECT * FROM "+ SaveDataContract.SaveDataEntry.TABLE_NAME, null);
+        ArrayList<String> propIds = new ArrayList();
+        ArrayList<String> propAddresses = new ArrayList();
+        Cursor cursorProperties = db.rawQuery("SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME, null);
 
-        //if the cursor has some data
         if (cursorProperties.moveToFirst()) {
             //looping through all the records
             do {
-                //pushing each record in the employee list
-                cities.add(
-                        cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY))
+                propAddresses.add(
+                        cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET))
+                                + " "
+                                + cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY))
+                );
+                propIds.add(
+                        cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry._ID))
                 );
             } while (cursorProperties.moveToNext());
         }
-        //closing the cursor
         cursorProperties.close();
 
-        Log.v("1",cities.toString());
+        Log.v("DB Ids", propIds.toString());
 
-        // Add a marker in Sydney and move the camera
-
-        for (int counter = 1; counter < cities.size()-3; counter++) {
-            LatLng propLocation = getLocationFromAddress(this.getContext(),cities.get(counter));
-           /* mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                @Override
-                public View getInfoWindow(Marker marker) {
-                    return null;
-                }
-
-                @Override
-                public View getInfoContents(Marker marker) {
-                    return null;
-                }
-            });
-            */
-
-            mMap.addMarker(new MarkerOptions().position(propLocation).title(cities.get(counter)).snippet("Property Details layout"));
-            //mMap.addMarker(new MarkerOptions().position(sydney).title("Sydney").snippet("Property Details layout"));
+        for (int counter = 0; counter < propIds.size(); counter++) {
+            LatLng propLocation = getLocationFromAddress(this.getContext(), propAddresses.get(counter));
+            mMap.addMarker(new MarkerOptions().position(propLocation).title(propIds.get(counter))
+                    //.snippet("Property Details layout")
+            );
             mMap.moveCamera(CameraUpdateFactory.newLatLng(propLocation));
         }
 
 
-      /*  mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
+                curMarker = marker;
                 AlertDialog.Builder builder = new AlertDialog.Builder(MapsFragment.this.getContext());
-                //searching marker id in locationDetailses and getting all the information of a particular marker
-               // for (int i = 0; i<locationDetailses.size(); i++) {
-                    //matching id so, alert dialog can show specific data
-               //     if (marker.getId().equals(locationDetailses.get(i).getMarkerID())){
-                        builder.setTitle("City: ");
-                        builder.setMessage("Wind Speed: ");
-               //     }
-             //   }
+                LayoutInflater inflater = MapsFragment.this.getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.maps_dialog, null);
+                curPropId = marker.getTitle();
+                SQLiteDatabase readableDb = mDbHelper.getWritableDatabase();
+                Cursor cursorProperties = readableDb.
+                        rawQuery(
+                                "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{curPropId});
+
+
+                if (cursorProperties.moveToFirst()) {
+
+                    builder.setTitle("Property Details");
+                    TextView city = dialogView.findViewById(R.id.dialog_cityText);
+                    city.setText(cursorProperties.getString(3));
+
+                    TextView loanAmt = dialogView.findViewById(R.id.dialog_loanHdText);
+                    loanAmt.setText(cursorProperties.getString(5));
+
+                }
+
+
+                builder.setView(dialogView);
 
                 builder.setPositiveButton("EDIT", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
+                        //Redirect to calc view and fetch data
                     }
                 });
                 builder.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
+                        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+                        db.delete(SaveDataContract.SaveDataEntry.TABLE_NAME, SaveDataContract.SaveDataEntry._ID + "=?", new String[]{curPropId});
+                        curMarker.remove();
                     }
                 });
 
@@ -138,9 +147,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
                 // Add the button
 
-                return false;
+                return true;
             }
-        });*/
+        });
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
@@ -151,14 +160,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         try {
             // May throw an IOException
             address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
+            if (address == null && address.isEmpty()) {
                 return null;
             }
             System.out.println(address);
 
 
             Address location = address.get(0);
-            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
 
         } catch (IOException ex) {
 
@@ -167,12 +176,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         return p1;
     }
-
-
-
-
-
-
 
 
 }
