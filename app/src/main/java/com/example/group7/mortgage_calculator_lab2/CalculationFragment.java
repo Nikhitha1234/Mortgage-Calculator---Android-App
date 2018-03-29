@@ -2,13 +2,16 @@ package com.example.group7.mortgage_calculator_lab2;
 
 
 import android.content.ContentValues;
-import android.content.Context;
+import android.location.Address;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +24,18 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.IOException;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CalculationFragment extends Fragment {
     public View calcView;
-    public double radioTerms_value,monthly_amt,loan_amt;
+    public double radioTerms_value=15,monthly_amt,loan_amt, propPrice=0,dwnPmt=0,apr;
 
     public CalculationFragment() {
         // Required empty public constructor
@@ -86,9 +94,9 @@ public class CalculationFragment extends Fragment {
                 et_apr.setText("");
                 spinner.setSelection(0);
                 spinner1.setSelection(0);
-                tv_monthly.setText("");
+                tv_monthly.setText("Waiting for Input ...");
                 RadioGroup radioGroup_terms = calcView.findViewById(R.id.rg_terms);
-                radioGroup_terms.clearCheck();
+                radioGroup_terms.check(R.id.radio_fifteen);
 
 
             }
@@ -98,37 +106,66 @@ public class CalculationFragment extends Fragment {
         final Button button_save =  calcView.findViewById(R.id.button_save);
         button_save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
-                // Gets the data repository in write mode
-                SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-                final EditText et_street =  calcView.findViewById(R.id.street);
-                final EditText et_city = calcView.findViewById(R.id.city);
-
-                final EditText et_apr=  calcView.findViewById(R.id.apr);
-
-                // Create a new map of values, where column names are the keys
-                ContentValues values = new ContentValues();
-                values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPTYPE, spinner.getSelectedItem().toString());
-                values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET, et_street.getText().toString());
-                values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY, et_city.getText().toString());
-                values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_LOANAMT, loan_amt);
-                values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_APR,et_apr.getText().toString());
-                values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
-
-                // Insert the new row, returning the primary key value of the new row
-                long newRowId = db.insert(SaveDataContract.SaveDataEntry.TABLE_NAME, null, values);
-
-                if(newRowId != -1) {
-                    Log.v("row", "Inserted");
-                    pagerAdapter.notifyDataSetChanged();
-                    Log.v("Info", "Maps fragment is notified");
+                final EditText et_street = (EditText) calcView.findViewById(R.id.street);
+                final EditText et_city = (EditText) calcView.findViewById(R.id.city);
+                final EditText et_propprice= (EditText) calcView.findViewById(R.id.propPrice);
+                final EditText et_apr= (EditText) calcView.findViewById(R.id.apr);
+                et_propprice.setError(null);
+                et_apr.setError(null);
+                if(TextUtils.isEmpty(et_street.getText().toString())){
+                    et_street.setError("This field cannot be empty");
                 }
-                else
-                    Log.v("row", "Not Inserted");
 
-            }
+                if(TextUtils.isEmpty(et_city.getText().toString())){
+                    et_city.setError("This field cannot be empty");
+                }
+                if(!(TextUtils.isEmpty(et_street.getText().toString())) && !(TextUtils.isEmpty(et_city.getText().toString()))) {
+
+                    List<Address> adr;
+                    Geocoder coder = new Geocoder(getActivity().getApplicationContext());
+                    String address = et_street.getText().toString() + " " + et_city.getText().toString();
+                    LatLng p = null;
+
+                    try {
+                        adr = coder.getFromLocationName(address,5);
+                        Log.v("adr",adr.toString());
+                        System.out.println(adr);
+                        Address location = adr.get(0);
+                        p = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    } catch (Exception ex) {
+
+                        ex.printStackTrace();
+                    }
+                    if(p==null){
+                        et_street.setError("Enter Proper Address");
+                        et_city.setError("Enter Proper Address");
+                    }
+                    else {
+                        SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
+                        // Gets the data repository in write mode
+                        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+                        // Create a new map of values, where column names are the keys
+                        ContentValues values = new ContentValues();
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPTYPE, spinner.getSelectedItem().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET, et_street.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY, et_city.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_LOANAMT, loan_amt);
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_APR, et_apr.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
+
+                        // Insert the new row, returning the primary key value of the new row
+                        long newRowId = db.insert(SaveDataContract.SaveDataEntry.TABLE_NAME, null, values);
+
+                        if (newRowId != -1) {
+                            Log.v("row", "Inserted");
+                            pagerAdapter.notifyDataSetChanged();
+                            Log.v("Info", "Maps fragment is notified");
+                        } else
+                            Log.v("row", "Not Inserted");
+
+                    }}    }
         });
 
         final Button button_calc =  calcView.findViewById(R.id.button_calc);
@@ -141,21 +178,45 @@ public class CalculationFragment extends Fragment {
                 final EditText et_apr =  calcView.findViewById(R.id.apr);
                 final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
 
-                double propPrice = Double.parseDouble(et_propPrice.getText().toString());
-                double dwnPmt = Double.parseDouble(et_downpmt.getText().toString());
-                double apr = Double.parseDouble(et_apr.getText().toString());
-                apr = apr/100;
-                radioTerms_value = radioTerms_value *12;
-                Log.v("apr",apr+"");
-                Log.v("xxx",Math.pow(1+apr,radioTerms_value) + " ");
-                Log.v("thly",radioTerms_value+"");
+                final EditText et_street =  calcView.findViewById(R.id.street);
+                final EditText et_city =  calcView.findViewById(R.id.city);
+                et_street.setError(null);
+                et_city.setError(null);
 
-                loan_amt = propPrice - dwnPmt;
+                if(TextUtils.isEmpty(et_propPrice.getText().toString())){
+                    et_propPrice.setError("This field cannot be empty");
+                }
+                else {
+                    propPrice = Double.parseDouble(et_propPrice.getText().toString());
+                }
+                if(!(TextUtils.isEmpty(et_downpmt.getText().toString()))){
+                    dwnPmt = Double.parseDouble(et_downpmt.getText().toString());
+                }
+                if (dwnPmt > propPrice)
 
-                monthly_amt = (loan_amt)*((apr* (Math.pow(1+apr,radioTerms_value)))/(Math.pow(1+apr,radioTerms_value)-1));
-                Log.v("monthly",monthly_amt+"");
-                tv_monthly.setText(monthly_amt+"");
+                {
+                    et_downpmt.setError("Down Payment cannot be greater than property price");
+                }
 
+                if(TextUtils.isEmpty(et_apr.getText().toString())){
+                    et_apr.setError("This field cannot be empty");
+                }
+                else {
+                    apr = Double.parseDouble(et_apr.getText().toString());
+                }
+                if(!(TextUtils.isEmpty(et_propPrice.getText().toString())) &&  !(TextUtils.isEmpty(et_apr.getText().toString())) && propPrice>=dwnPmt) {
+                    apr = apr / 100;
+                    radioTerms_value = radioTerms_value * 12;
+                    Log.v("apr", apr + "");
+                    Log.v("xxx", Math.pow(1 + apr, radioTerms_value) + " ");
+                    Log.v("thly", radioTerms_value + "");
+
+                    loan_amt = propPrice - dwnPmt;
+
+                    monthly_amt = (loan_amt) * ((apr * (Math.pow(1 + apr, radioTerms_value))) / (Math.pow(1 + apr, radioTerms_value) - 1));
+                    Log.v("monthly", monthly_amt + "");
+                    tv_monthly.setText(monthly_amt + "");
+                }
             }
         });
         return calcView;

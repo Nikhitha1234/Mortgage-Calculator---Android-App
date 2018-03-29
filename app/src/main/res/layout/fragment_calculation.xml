@@ -237,6 +237,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/fifteen"
                         android:textColor="@color/white"
+                        android:checked="true"
                         android:buttonTint="@color/white"/>
                     <RadioButton android:id="@+id/radio_thirty"
                         android:layout_width="wrap_content"

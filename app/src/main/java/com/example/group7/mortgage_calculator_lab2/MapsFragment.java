@@ -68,6 +68,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        //db.execSQL("delete from "+ SaveDataContract.SaveDataEntry.TABLE_NAME);
+
         db.delete(SaveDataContract.SaveDataEntry.TABLE_NAME, SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY + "=?", new String[]{""});
 
         ArrayList<String> propIds = new ArrayList();
@@ -117,12 +119,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 if (cursorProperties.moveToFirst()) {
 
                     builder.setTitle("Property Details");
+
+                    TextView proptype = dialogView.findViewById(R.id.dialog_propTypeText);
+                    proptype.setText(cursorProperties.getString(1));
+
+                    TextView street = dialogView.findViewById(R.id.dialog_streetText);
+                    street.setText(cursorProperties.getString(2));
+
                     TextView city = dialogView.findViewById(R.id.dialog_cityText);
                     city.setText(cursorProperties.getString(3));
 
-                    TextView loanAmt = dialogView.findViewById(R.id.dialog_loanHdText);
-                    loanAmt.setText(cursorProperties.getString(5));
+                    TextView apr = dialogView.findViewById(R.id.dialog_aprText);
+                    apr.setText(cursorProperties.getString(5));
 
+                    TextView loanAmt = dialogView.findViewById(R.id.dialog_loanHdText);
+                    loanAmt.setText(cursorProperties.getString(4));
+
+                    TextView monthlypmt = dialogView.findViewById(R.id.dialog_monthlypmtText);
+                    monthlypmt.setText(cursorProperties.getString(6));
                 }
 
 
@@ -131,6 +145,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 builder.setPositiveButton("EDIT", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //Redirect to calc view and fetch data
+
                     }
                 });
                 builder.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
