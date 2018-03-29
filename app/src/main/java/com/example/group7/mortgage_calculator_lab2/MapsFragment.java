@@ -59,8 +59,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
+        mMap.setMinZoomPreference(6.0f);
+        mMap.setMaxZoomPreference(14.0f);
 
         SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
         // Gets the data repository in write mode
@@ -86,22 +86,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
 
-        LatLng sydney = getLocationFromAddress(this.getContext(),cities.get(1));
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
+        for (int counter = 1; counter < cities.size()-3; counter++) {
+            LatLng propLocation = getLocationFromAddress(this.getContext(),cities.get(counter));
+           /* mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
 
-            @Override
-            public View getInfoContents(Marker marker) {
-                return null;
-            }
-        });
+                @Override
+                public View getInfoContents(Marker marker) {
+                    return null;
+                }
+            });
+            */
 
-        mMap.addMarker(new MarkerOptions().position(sydney).title(cities.get(1)).snippet("Property Details layout"));
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Sydney").snippet("Property Details layout"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            mMap.addMarker(new MarkerOptions().position(propLocation).title(cities.get(counter)).snippet("Property Details layout"));
+            //mMap.addMarker(new MarkerOptions().position(sydney).title("Sydney").snippet("Property Details layout"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(propLocation));
+        }
+
 
       /*  mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
