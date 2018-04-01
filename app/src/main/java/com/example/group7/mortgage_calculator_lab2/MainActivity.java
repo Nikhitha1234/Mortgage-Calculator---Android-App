@@ -1,5 +1,6 @@
 package com.example.group7.mortgage_calculator_lab2;
 
+import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter{
 
+        int propId = 0;
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -95,8 +97,12 @@ public class MainActivity extends AppCompatActivity {
             //return PlaceholderFragment.newInstance(position + 1);
             switch (position){
                 case 0:
-                    CalculationFragment calcFragment =  new CalculationFragment();
+                    //System.out.println("PropId"+propId);
+                    Bundle args = new Bundle();
+                    args.putInt("propId", propId);
 
+                    CalculationFragment calcFragment =  new CalculationFragment();
+                    calcFragment.setArguments(args);
                     return calcFragment;
                 case 1:
                     MapsFragment mapsFragment = new MapsFragment();
@@ -118,5 +124,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        public void setPropertyId(int id){
+            propId=id;
+        }
     }
 }

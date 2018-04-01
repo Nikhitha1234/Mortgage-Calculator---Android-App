@@ -36,25 +36,23 @@ import java.util.List;
 public class CalculationFragment extends Fragment {
     public View calcView;
     public double radioTerms_value=15,monthly_amt,loan_amt, propPrice=0,dwnPmt=0,apr;
-
+    public static int propId;
     public CalculationFragment() {
         // Required empty public constructor
     }
 
+
     public ViewPager mViewPager;
-    Fragment mapsFragment;
     FragmentStatePagerAdapter pagerAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         calcView = inflater.inflate(R.layout.fragment_calculation, container, false);
-
+        System.out.println(getArguments().get("propId"));
         mViewPager = (ViewPager) container;
         pagerAdapter =  (FragmentStatePagerAdapter) mViewPager.getAdapter();
 
-        //use mapsFragment to call getLocationfromAddress to validate address
-        mapsFragment =  pagerAdapter.getItem(1);
 
         final Spinner spinner = (Spinner) calcView.findViewById(R.id.propType_spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout

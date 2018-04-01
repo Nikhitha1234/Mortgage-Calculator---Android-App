@@ -8,6 +8,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,10 +37,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     Marker curMarker;
     private GoogleMap mMap;
 
+    public ViewPager mViewPager;
+    Fragment calcFragment;
+    MainActivity.SectionsPagerAdapter pagerAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View mapsView = inflater.inflate(R.layout.activity_maps, container, false);
+        mViewPager = (ViewPager) container;
+        pagerAdapter =  (MainActivity.SectionsPagerAdapter) mViewPager.getAdapter();
         fragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         //fragment.getMapAsync(this);
         return mapsView;
@@ -62,8 +70,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMinZoomPreference(6.0f);
-        mMap.setMaxZoomPreference(14.0f);
+        mMap.setMinZoomPreference(12.0f);
+        mMap.setMaxZoomPreference(17.0f);
 
         mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
         // Gets the data repository in write mode
@@ -105,6 +113,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+
                 curMarker = marker;
                 AlertDialog.Builder builder = new AlertDialog.Builder(MapsFragment.this.getContext());
                 LayoutInflater inflater = MapsFragment.this.getLayoutInflater();
@@ -114,6 +123,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 Cursor cursorProperties = readableDb.
                         rawQuery(
                                 "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{curPropId});
+
 
 
                 if (cursorProperties.moveToFirst()) {
@@ -130,13 +140,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     city.setText(cursorProperties.getString(3));
 
                     TextView apr = dialogView.findViewById(R.id.dialog_aprText);
-                    apr.setText(cursorProperties.getString(5));
+                    apr.setText(cursorProperties.getString(5) + "%");
 
                     TextView loanAmt = dialogView.findViewById(R.id.dialog_loanHdText);
                     loanAmt.setText(cursorProperties.getString(4));
 
                     TextView monthlypmt = dialogView.findViewById(R.id.dialog_monthlypmtText);
                     monthlypmt.setText(cursorProperties.getString(6));
+
+                    pagerAdapter.setPropertyId(cursorProperties.getInt(0));
                 }
 
 
@@ -145,6 +157,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 builder.setPositiveButton("EDIT", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //Redirect to calc view and fetch data
+                        pagerAdapter.notifyDataSetChanged();
+                        mViewPager.setCurrentItem(0);
+//
 
                     }
                 });
