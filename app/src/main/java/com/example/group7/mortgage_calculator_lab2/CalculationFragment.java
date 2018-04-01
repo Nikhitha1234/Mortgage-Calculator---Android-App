@@ -2,6 +2,7 @@ package com.example.group7.mortgage_calculator_lab2;
 
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.location.Address;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,12 +44,6 @@ public class CalculationFragment extends Fragment {
         // Required empty public constructor
     }
 
-    @Override
-    public void setArguments(Bundle args) {
-        super.setArguments(args);
-    }
-
-
     public ViewPager mViewPager;
     FragmentStatePagerAdapter pagerAdapter;
     @Override
@@ -81,38 +76,6 @@ public class CalculationFragment extends Fragment {
 
 
         propId = (int)getArguments().get("propId");
-
-
-        if(propId!=0) {
-            SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
-            SQLiteDatabase writableDb = mDbHelper.getWritableDatabase();
-            Cursor cursorProperties = writableDb.
-                    rawQuery(
-                            "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{String.valueOf(propId)});
-
-            if (cursorProperties.moveToFirst()) {
-
-               final EditText et_street = calcView.findViewById(R.id.street);
-                final EditText et_city = calcView.findViewById(R.id.city);
-                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
-                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
-                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
-                final EditText et_apr = calcView.findViewById(R.id.apr);
-                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
-
-                System.out.println(cursorProperties.getString(2));
-                et_street.setText("sdhkjahdskjadhs");
-
-                //et_city.setText(cursorProperties.getString(3));
-
-
-            }
-
-        }
-
-
-/*
-
 
         final Button button_new =  calcView.findViewById(R.id.button_new);
         button_new.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +143,26 @@ public class CalculationFragment extends Fragment {
                         et_street.setError("Enter Proper Address");
                         et_city.setError("Enter Proper Address");
                     }
+                    else if(propId!=0){
+                        SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
+                        // Gets the data repository in write mode
+                        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+                        ContentValues values = new ContentValues();
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPTYPE, spinner.getSelectedItem().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET, et_street.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY, et_city.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_LOANAMT, loan_amt);
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_APR, et_apr.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
+
+                        db.update(SaveDataContract.SaveDataEntry.TABLE_NAME, values,SaveDataContract.SaveDataEntry._ID + "=?", new String[]{String.valueOf(propId)});
+                    }
+
                     else {
+                        //Setting new prop
+                        propId=0;
+
                         SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
                         // Gets the data repository in write mode
                         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -257,11 +239,42 @@ public class CalculationFragment extends Fragment {
                     tv_monthly.setText(monthly_amt + "");
                 }
             }
-        });*/
+        });
 
         return calcView;
     }
 
+    @Override
+    public void onResume() {
+
+        if(propId!=0) {
+            Log.v("PROP","djask");
+            // TextView et_street = calcView.findViewById(R.id.streetText);
+            //  et_street.setText("sdhkjahdskjadhs");
+            SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
+            SQLiteDatabase writableDb = mDbHelper.getWritableDatabase();
+            Cursor cursorProperties = writableDb.
+                    rawQuery(
+                            "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{String.valueOf(propId)});
+
+            if (cursorProperties.moveToFirst()) {
+
+                final TextView et_street = calcView.findViewById(R.id.street);
+                final EditText et_city = calcView.findViewById(R.id.city);
+                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
+                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
+                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
+                final EditText et_apr = calcView.findViewById(R.id.apr);
+                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
+
+                et_street.setText(cursorProperties.getString(2));
+                et_city.setText(cursorProperties.getString(3));
+
+            }
+
+        }
+        super.onResume();
+    }
 
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
