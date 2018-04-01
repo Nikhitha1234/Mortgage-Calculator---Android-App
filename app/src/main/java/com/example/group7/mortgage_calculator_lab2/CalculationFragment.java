@@ -39,6 +39,7 @@ public class CalculationFragment extends Fragment {
     public View calcView;
     public double radioTerms_value=15,monthly_amt,loan_amt, propPrice=0,dwnPmt=0,apr;
     public static int propId=0;
+
     public CalculationFragment() {
         // Required empty public constructor
     }
@@ -58,6 +59,16 @@ public class CalculationFragment extends Fragment {
         calcView = inflater.inflate(R.layout.fragment_calculation, container, false);
         mViewPager = (ViewPager) container;
         pagerAdapter =  (FragmentStatePagerAdapter) mViewPager.getAdapter();
+
+        final EditText et_street = calcView.findViewById(R.id.street);
+        final EditText et_city = calcView.findViewById(R.id.city);
+        final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
+        final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
+        final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
+        final EditText et_apr = calcView.findViewById(R.id.apr);
+        final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
+        final TextView tv_monthlytxt =  calcView.findViewById(R.id.monthlyTxt);
+
 
 
 
@@ -80,51 +91,44 @@ public class CalculationFragment extends Fragment {
         spinner1.setAdapter(adapter1);
 
 
-        propId = (int)getArguments().get("propId");
+//        propId = (int)getArguments().get("propId");
+//
+//
+//        if(propId!=0) {
+//            SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
+//            SQLiteDatabase writableDb = mDbHelper.getWritableDatabase();
+//            Cursor cursorProperties = writableDb.
+//                    rawQuery(
+//                            "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{String.valueOf(propId)});
+//
+//            if (cursorProperties.moveToFirst()) {
+//
+//               final EditText et_street = calcView.findViewById(R.id.street);
+//                final EditText et_city = calcView.findViewById(R.id.city);
+//                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
+//                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
+//                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
+//                final EditText et_apr = calcView.findViewById(R.id.apr);
+//                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
+//
+//                Log.v("curs",cursorProperties.getString(2));
+//                et_propPrice.setText("1");
+//
+//                //et_city.setText(cursorProperties.getString(3));
+//
+//
+//            }
+//
+//        }
 
 
-        if(propId!=0) {
-            SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
-            SQLiteDatabase writableDb = mDbHelper.getWritableDatabase();
-            Cursor cursorProperties = writableDb.
-                    rawQuery(
-                            "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{String.valueOf(propId)});
 
-            if (cursorProperties.moveToFirst()) {
-
-               final EditText et_street = calcView.findViewById(R.id.street);
-                final EditText et_city = calcView.findViewById(R.id.city);
-                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
-                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
-                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
-                final EditText et_apr = calcView.findViewById(R.id.apr);
-                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
-
-                System.out.println(cursorProperties.getString(2));
-                et_street.setText("sdhkjahdskjadhs");
-
-                //et_city.setText(cursorProperties.getString(3));
-
-
-            }
-
-        }
-
-
-/*
 
 
         final Button button_new =  calcView.findViewById(R.id.button_new);
         button_new.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
-                final EditText et_street = calcView.findViewById(R.id.street);
-                final EditText et_city = calcView.findViewById(R.id.city);
-                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
-                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
-                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
-                final EditText et_apr = calcView.findViewById(R.id.apr);
-                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
                 et_street.setText("");
                 et_city.setText("");
                 et_zipcode.setText("");
@@ -133,7 +137,7 @@ public class CalculationFragment extends Fragment {
                 et_apr.setText("");
                 spinner.setSelection(0);
                 spinner1.setSelection(0);
-                tv_monthly.setText("Waiting for Input ...");
+                //tv_monthly.setText("Waiting for Input ...");
                 RadioGroup radioGroup_terms = calcView.findViewById(R.id.rg_terms);
                 radioGroup_terms.check(R.id.radio_fifteen);
 
@@ -145,11 +149,7 @@ public class CalculationFragment extends Fragment {
         final Button button_save =  calcView.findViewById(R.id.button_save);
         button_save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final EditText et_street = (EditText) calcView.findViewById(R.id.street);
-                final EditText et_city = (EditText) calcView.findViewById(R.id.city);
-                final EditText et_propprice= (EditText) calcView.findViewById(R.id.propPrice);
-                final EditText et_apr= (EditText) calcView.findViewById(R.id.apr);
-                et_propprice.setError(null);
+                et_propPrice.setError(null);
                 et_apr.setError(null);
                 if(TextUtils.isEmpty(et_street.getText().toString())){
                     et_street.setError("This field cannot be empty");
@@ -190,6 +190,11 @@ public class CalculationFragment extends Fragment {
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPTYPE, spinner.getSelectedItem().toString());
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET, et_street.getText().toString());
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY, et_city.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_STATE, spinner1.getSelectedItem().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_ZIPCODE, et_zipcode.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPRICE, et_propPrice.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_DWNPMT, et_downpmt.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_TERMS,radioTerms_value);
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_LOANAMT, loan_amt);
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_APR, et_apr.getText().toString());
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
@@ -211,14 +216,6 @@ public class CalculationFragment extends Fragment {
         button_calc.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button Calc
-
-                final EditText et_propPrice =  calcView.findViewById(R.id.propPrice);
-                final EditText et_downpmt =  calcView.findViewById(R.id.downPmt);
-                final EditText et_apr =  calcView.findViewById(R.id.apr);
-                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
-
-                final EditText et_street =  calcView.findViewById(R.id.street);
-                final EditText et_city =  calcView.findViewById(R.id.city);
                 et_street.setError(null);
                 et_city.setError(null);
 
@@ -254,10 +251,12 @@ public class CalculationFragment extends Fragment {
 
                     monthly_amt = (loan_amt) * ((apr * (Math.pow(1 + apr, radioTerms_value))) / (Math.pow(1 + apr, radioTerms_value) - 1));
                     Log.v("monthly", monthly_amt + "");
+                    tv_monthlytxt.setText("Your Monthly Payment is : ");
+
                     tv_monthly.setText(monthly_amt + "");
                 }
             }
-        });*/
+        });
 
         return calcView;
     }
@@ -279,5 +278,81 @@ public class CalculationFragment extends Fragment {
                     radioTerms_value =  30;
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        propId = (int)getArguments().get("propId");
+
+
+        if(propId!=0) {
+            SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
+            SQLiteDatabase writableDb = mDbHelper.getWritableDatabase();
+            Cursor cursorProperties = writableDb.
+                    rawQuery(
+                            "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{String.valueOf(propId)});
+
+            if (cursorProperties.moveToFirst()) {
+
+                final EditText et_street = calcView.findViewById(R.id.street);
+                final EditText et_city = calcView.findViewById(R.id.city);
+                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
+                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
+                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
+                final EditText et_apr = calcView.findViewById(R.id.apr);
+                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
+
+
+
+                final Spinner spinner = (Spinner) calcView.findViewById(R.id.propType_spinner);
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getContext(),
+                        R.array.proptype_array, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+                Log.v("sp",cursorProperties.getString(1));
+                int spinnerPosition = adapter.getPosition(cursorProperties.getString(1));
+                Log.v("pos",spinnerPosition+"");
+                spinner.setSelection(spinnerPosition);
+
+
+                final Spinner spinner1 = (Spinner) calcView.findViewById(R.id.state_spinner);
+                ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this.getContext(),
+                        R.array.state_array, android.R.layout.simple_spinner_item);
+                adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner1.setAdapter(adapter1);
+                int spinnerPosition1 = adapter1.getPosition(cursorProperties.getString(4));
+                spinner1.setSelection(spinnerPosition1);
+
+                final RadioButton rb1 = (RadioButton) calcView.findViewById(R.id.radio_fifteen);
+                final RadioButton rb2 = (RadioButton) calcView.findViewById(R.id.radio_thirty);
+                Log.v("terms",cursorProperties.getString(8));
+                if(Double.parseDouble(cursorProperties.getString(8))==15.0){
+                    rb1.setChecked(true);
+                }
+                else {
+                    rb2.setChecked(true);
+                }
+
+                Log.v("curs",cursorProperties.getString(1));
+                Log.v("curs",cursorProperties.getString(0));
+                Log.v("curs", String.valueOf(cursorProperties));
+
+                et_propPrice.setText("1");
+                et_city.setText(cursorProperties.getString(3));
+                et_street.setText(cursorProperties.getString(2));
+                et_zipcode.setText(cursorProperties.getString(5));
+                et_propPrice.setText(cursorProperties.getString(6));
+                et_downpmt.setText(cursorProperties.getString(7));
+                et_apr.setText(cursorProperties.getString(10));
+
+                //et_city.setText(cursorProperties.getString(3));
+
+
+            }
+
+        }
+
+
     }
 }

@@ -82,8 +82,6 @@
     <string name="new_mort">New</string>
     <string name="save_data">Save</string>
     <string name="calculate">Calculate</string>
-    <string name="monthlyText">Your monthly payment is : </string>
-    <string name="monthly"> Waiting for Input ...</string>
     <string name="title_activity_maps">Map</string>
 
 </resources>

@@ -16,6 +16,11 @@ public class SaveDataContract {
         public static final String COLUMN_NAME_PROPTYPE = "proptype";
         public static final String COLUMN_NAME_STREET = "street";
         public static final String COLUMN_NAME_CITY = "city";
+        public static final String COLUMN_NAME_STATE = "state";
+        public static final String COLUMN_NAME_ZIPCODE = "zipcode";
+        public static final String COLUMN_NAME_PROPRICE = "propprice";
+        public static final String COLUMN_NAME_DWNPMT = "dwnpmt";
+        public static final String COLUMN_NAME_TERMS = "terms";
         public static final String COLUMN_NAME_LOANAMT = "loanamt";
         public static final String COLUMN_NAME_APR = "apr";
         public static final String COLUMN_NAME_MPMT = "monthlypmt";
@@ -28,6 +33,11 @@ public class SaveDataContract {
                     SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPTYPE + " TEXT," +
                     SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET + " TEXT," +
                     SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY + " TEXT," +
+                    SaveDataContract.SaveDataEntry.COLUMN_NAME_STATE + " TEXT," +
+                    SaveDataContract.SaveDataEntry.COLUMN_NAME_ZIPCODE + " TEXT," +
+                    SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPRICE + " TEXT," +
+                    SaveDataContract.SaveDataEntry.COLUMN_NAME_DWNPMT + " TEXT," +
+                    SaveDataContract.SaveDataEntry.COLUMN_NAME_TERMS + " TEXT," +
                     SaveDataContract.SaveDataEntry.COLUMN_NAME_LOANAMT + " TEXT," +
                     SaveDataContract.SaveDataEntry.COLUMN_NAME_APR + " TEXT," +
                     SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT + " TEXT)";

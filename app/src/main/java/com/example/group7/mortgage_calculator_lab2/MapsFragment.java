@@ -78,7 +78,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         //db.execSQL("delete from "+ SaveDataContract.SaveDataEntry.TABLE_NAME);
 
-        db.delete(SaveDataContract.SaveDataEntry.TABLE_NAME, SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY + "=?", new String[]{""});
+//        db.delete(SaveDataContract.SaveDataEntry.TABLE_NAME, SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY + "=?", new String[]{""});
 
         ArrayList<String> propIds = new ArrayList();
         ArrayList<String> propAddresses = new ArrayList();

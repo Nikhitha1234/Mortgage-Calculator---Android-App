@@ -280,8 +280,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:id="@+id/monthlyTxt"
-                android:textColor="@color/white"
-                android:text="@string/monthlyText"/>
+                android:textColor="@color/white"></TextView>
 
         </LinearLayout>
 
@@ -292,8 +291,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/monthly"
-                android:textColor="@color/white"
-                android:text="@string/monthly"/>
+                android:textColor="@color/white"></TextView>
 
         </LinearLayout>
     </LinearLayout>
