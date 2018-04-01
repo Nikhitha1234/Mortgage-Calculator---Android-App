@@ -2,6 +2,7 @@ package com.example.group7.mortgage_calculator_lab2;
 
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.location.Address;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
@@ -9,6 +10,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -36,9 +38,14 @@ import java.util.List;
 public class CalculationFragment extends Fragment {
     public View calcView;
     public double radioTerms_value=15,monthly_amt,loan_amt, propPrice=0,dwnPmt=0,apr;
-    public static int propId;
+    public static int propId=0;
     public CalculationFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
     }
 
 
@@ -49,9 +56,9 @@ public class CalculationFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         calcView = inflater.inflate(R.layout.fragment_calculation, container, false);
-        System.out.println(getArguments().get("propId"));
         mViewPager = (ViewPager) container;
         pagerAdapter =  (FragmentStatePagerAdapter) mViewPager.getAdapter();
+
 
 
         final Spinner spinner = (Spinner) calcView.findViewById(R.id.propType_spinner);
@@ -71,6 +78,40 @@ public class CalculationFragment extends Fragment {
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner1.setAdapter(adapter1);
+
+
+        propId = (int)getArguments().get("propId");
+
+
+        if(propId!=0) {
+            SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
+            SQLiteDatabase writableDb = mDbHelper.getWritableDatabase();
+            Cursor cursorProperties = writableDb.
+                    rawQuery(
+                            "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{String.valueOf(propId)});
+
+            if (cursorProperties.moveToFirst()) {
+
+               final EditText et_street = calcView.findViewById(R.id.street);
+                final EditText et_city = calcView.findViewById(R.id.city);
+                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
+                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
+                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
+                final EditText et_apr = calcView.findViewById(R.id.apr);
+                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
+
+                System.out.println(cursorProperties.getString(2));
+                et_street.setText("sdhkjahdskjadhs");
+
+                //et_city.setText(cursorProperties.getString(3));
+
+
+            }
+
+        }
+
+
+/*
 
 
         final Button button_new =  calcView.findViewById(R.id.button_new);
@@ -216,7 +257,8 @@ public class CalculationFragment extends Fragment {
                     tv_monthly.setText(monthly_amt + "");
                 }
             }
-        });
+        });*/
+
         return calcView;
     }
 

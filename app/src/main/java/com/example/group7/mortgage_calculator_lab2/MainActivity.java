@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                     //System.out.println("PropId"+propId);
                     Bundle args = new Bundle();
                     args.putInt("propId", propId);
-
                     CalculationFragment calcFragment =  new CalculationFragment();
                     calcFragment.setArguments(args);
                     return calcFragment;

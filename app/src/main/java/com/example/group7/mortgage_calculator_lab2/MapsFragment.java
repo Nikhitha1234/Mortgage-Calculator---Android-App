@@ -99,7 +99,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
         cursorProperties.close();
 
-        Log.v("DB Ids", propIds.toString());
+       // Log.v("DB Ids", propIds.toString());
 
         for (int counter = 0; counter < propIds.size(); counter++) {
             LatLng propLocation = getLocationFromAddress(this.getContext(), propAddresses.get(counter));
@@ -149,8 +149,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     monthlypmt.setText(cursorProperties.getString(6));
 
                     pagerAdapter.setPropertyId(cursorProperties.getInt(0));
-                }
 
+                }
 
                 builder.setView(dialogView);
 
@@ -159,10 +159,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         //Redirect to calc view and fetch data
                         pagerAdapter.notifyDataSetChanged();
                         mViewPager.setCurrentItem(0);
-//
 
                     }
                 });
+
                 builder.setNegativeButton("DELETE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         SQLiteDatabase db = mDbHelper.getWritableDatabase();
