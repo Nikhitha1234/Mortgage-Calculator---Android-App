@@ -140,13 +140,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     city.setText(cursorProperties.getString(3));
 
                     TextView apr = dialogView.findViewById(R.id.dialog_aprText);
-                    apr.setText(cursorProperties.getString(5) + "%");
+                    apr.setText(cursorProperties.getString(10) + "%");
 
                     TextView loanAmt = dialogView.findViewById(R.id.dialog_loanHdText);
-                    loanAmt.setText(cursorProperties.getString(4));
+                    loanAmt.setText(cursorProperties.getString(9));
 
                     TextView monthlypmt = dialogView.findViewById(R.id.dialog_monthlypmtText);
-                    monthlypmt.setText(cursorProperties.getString(6));
+                    monthlypmt.setText(cursorProperties.getString(11));
 
                     pagerAdapter.setPropertyId(cursorProperties.getInt(0));
 
