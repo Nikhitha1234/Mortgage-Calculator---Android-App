@@ -294,15 +294,15 @@ public class CalculationFragment extends Fragment {
             apr = Double.parseDouble(et_apr.getText().toString());
         }
         if(!(TextUtils.isEmpty(et_propPrice.getText().toString())) &&  !(TextUtils.isEmpty(et_apr.getText().toString())) && propPrice>=dwnPmt) {
-            apr = apr / 100;
-            radioTerms_value = radioTerms_value * 12;
+            apr = apr / 1200;
+            double terms = radioTerms_value * 12;
             Log.v("apr", apr + "");
             Log.v("xxx", Math.pow(1 + apr, radioTerms_value) + " ");
             Log.v("thly", radioTerms_value + "");
 
             loan_amt = propPrice - dwnPmt;
 
-            monthly_amt = (loan_amt) * ((apr * (Math.pow(1 + apr, radioTerms_value))) / (Math.pow(1 + apr, radioTerms_value) - 1));
+            monthly_amt = (loan_amt) * ((apr * (Math.pow(1 + apr, terms))) / (Math.pow(1 + apr, terms) - 1));
 
             monthly_amt = (double)Math.round(monthly_amt * 100d) / 100d;
             Log.v("monthly", monthly_amt + "");
