@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="20dp">
 
             // Prop Heading
             <LinearLayout
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/propType"
-                    android:textSize="15dp"/>
+                    android:textSize="20dp"/>
                 <Spinner
                     android:id="@+id/propType_spinner"
                     android:layout_width="fill_parent"
@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/streetText"
-                    android:textSize="15dp"/>
+                    android:textSize="20dp"/>
                 <EditText
                     android:id="@+id/street"
                     android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/cityText"
-                    android:textSize="15dp"/>
+                    android:textSize="20dp"/>
                 <EditText
                     android:id="@+id/city"
                     android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/stateText"
-                    android:textSize="15dp"/>
+                    android:textSize="20dp"/>
                 <Spinner
                     android:id="@+id/state_spinner"
                     android:layout_width="fill_parent"
@@ -125,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/zipcodeText"
-                    android:textSize="15dp"/>
+                    android:textSize="20dp"/>
                 <EditText
                     android:id="@+id/zipcode"
                     android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             tools:ignore="Orientation"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="20dp">
             <TextView
                 android:id="@+id/loanHdText"
                 android:layout_height="wrap_content"
@@ -163,7 +163,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/propPriceText"
-                    android:textSize="15dp" />
+                    android:textSize="20dp" />
                 <EditText
                     android:id="@+id/propPrice"
                     android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/downPmtText"
-                    android:textSize="15dp"/>
+                    android:textSize="20dp"/>
                 <EditText
                     android:id="@+id/downPmt"
                     android:layout_height="wrap_content"
@@ -205,7 +205,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/aprText"
-                    android:textSize="15dp"/>
+                    android:textSize="20dp"/>
                 <EditText
                     android:id="@+id/apr"
                     android:layout_height="wrap_content"
@@ -226,7 +226,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@android:color/white"
                     android:text="@string/termsText"
-                    android:textSize="15dp"/>
+                    android:textSize="20dp"/>
                 <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -280,6 +280,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:id="@+id/monthlyTxt"
+                android:textSize="20dp"
                 android:textColor="@color/white"></TextView>
 
         </LinearLayout>
@@ -291,6 +292,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/monthly"
+                android:textSize="20dp"
                 android:textColor="@color/white"></TextView>
 
         </LinearLayout>

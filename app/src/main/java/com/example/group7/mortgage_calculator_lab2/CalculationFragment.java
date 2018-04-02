@@ -178,7 +178,8 @@ public class CalculationFragment extends Fragment {
 
                         ex.printStackTrace();
                     }
-                    if(!(TextUtils.isEmpty(et_propPrice.toString())) || !(TextUtils.isEmpty(et_downpmt.toString())) || !(TextUtils.isEmpty(et_apr.toString()))){
+
+                    if(!(TextUtils.isEmpty(et_propPrice.getText().toString())) || !(TextUtils.isEmpty(et_downpmt.getText().toString())) || !(TextUtils.isEmpty(et_apr.getText().toString()))){
                         calculate();
                     }
                     if(p==null){
