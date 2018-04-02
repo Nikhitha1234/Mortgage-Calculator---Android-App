@@ -70,8 +70,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMinZoomPreference(12.0f);
-        mMap.setMaxZoomPreference(17.0f);
+        mMap.setMinZoomPreference(10.0f);
+        mMap.setMaxZoomPreference(18.0f);
 
         mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
         // Gets the data repository in write mode
@@ -89,9 +89,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             do {
                 propAddresses.add(
                         cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET))
-                                + " "
-                                + cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY))
-                );
+                                + ", "
+                                + cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY))+ ", "
+                                + cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_STATE)) +  " "
+                                + cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_ZIPCODE)));
+
                 propIds.add(
                         cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry._ID))
                 );
@@ -143,10 +145,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     apr.setText(cursorProperties.getString(10) + "%");
 
                     TextView loanAmt = dialogView.findViewById(R.id.dialog_loanHdText);
-                    loanAmt.setText(cursorProperties.getString(9));
+                    loanAmt.setText(cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_LOANAMT)));
 
+
+                    Log.v("sdhsal",cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT)));
                     TextView monthlypmt = dialogView.findViewById(R.id.dialog_monthlypmtText);
-                    monthlypmt.setText(cursorProperties.getString(11));
+                    monthlypmt.setText(cursorProperties.getString(cursorProperties.getColumnIndex(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT)));
 
                     pagerAdapter.setPropertyId(cursorProperties.getInt(0));
 
@@ -195,11 +199,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             }
             System.out.println(address);
 
-
             Address location = address.get(0);
             p1 = new LatLng(location.getLatitude(), location.getLongitude());
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
 
             ex.printStackTrace();
         }

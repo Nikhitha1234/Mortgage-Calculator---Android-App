@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -39,6 +38,7 @@ public class CalculationFragment extends Fragment {
     public View calcView;
     public double radioTerms_value=15,monthly_amt,loan_amt, propPrice=0,dwnPmt=0,apr;
     public static int propId=0;
+    public static boolean isNewRecord = false;
 
     public CalculationFragment() {
         // Required empty public constructor
@@ -51,14 +51,17 @@ public class CalculationFragment extends Fragment {
 
 
     public ViewPager mViewPager;
-    FragmentStatePagerAdapter pagerAdapter;
+    MainActivity.SectionsPagerAdapter  pagerAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         calcView = inflater.inflate(R.layout.fragment_calculation, container, false);
         mViewPager = (ViewPager) container;
-        pagerAdapter =  (FragmentStatePagerAdapter) mViewPager.getAdapter();
+        pagerAdapter =  (MainActivity.SectionsPagerAdapter) mViewPager.getAdapter();
+
+        propId = (int)getArguments().get("propId");
+        isNewRecord =  (boolean) getArguments().get("isNewRecord");
 
         final EditText et_street = calcView.findViewById(R.id.street);
         final EditText et_city = calcView.findViewById(R.id.city);
@@ -123,6 +126,7 @@ public class CalculationFragment extends Fragment {
                 loan_amt=0;
                 propPrice=0;
                 dwnPmt=0;
+                propId=0;
 
                 radioGroup_terms.check(R.id.radio_fifteen);
 
@@ -151,14 +155,16 @@ public class CalculationFragment extends Fragment {
                     et_street.setError("This field cannot be empty");
                 }
 
-                if(TextUtils.isEmpty(et_city.getText().toString())){
+                else if(TextUtils.isEmpty(et_city.getText().toString())){
                     et_city.setError("This field cannot be empty");
                 }
-                if(!(TextUtils.isEmpty(et_street.getText().toString())) && !(TextUtils.isEmpty(et_city.getText().toString()))) {
+
+                else if(!(TextUtils.isEmpty(et_street.getText().toString())) && !(TextUtils.isEmpty(et_city.getText().toString()))) {
 
                     List<Address> adr;
                     Geocoder coder = new Geocoder(getActivity().getApplicationContext());
-                    String address = et_street.getText().toString() + " " + et_city.getText().toString();
+                    String address = et_street.getText().toString() + ", " + et_city.getText().toString() + ", " +
+                            spinner1.getSelectedItem().toString() + " "+ et_zipcode.getText().toString();
                     LatLng p = null;
 
                     try {
@@ -182,6 +188,9 @@ public class CalculationFragment extends Fragment {
 
                     else if(propId>0){
 
+                        et_street.setError(null);
+                        et_city.setError(null);
+
                         SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
                         // Gets the data repository in write mode
                         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -200,10 +209,14 @@ public class CalculationFragment extends Fragment {
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
 
                         db.update(SaveDataContract.SaveDataEntry.TABLE_NAME, values, "_id="+propId,null);
-
+                        tv_monthlytxt.setText(" Mortgage Calculation SAVED.");
+                        tv_monthly.setText("");
                     }
 
                     else{
+                        et_street.setError(null);
+                        et_city.setError(null);
+
                         SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
                         // Gets the data repository in write mode
                         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -222,14 +235,15 @@ public class CalculationFragment extends Fragment {
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_APR, et_apr.getText().toString());
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
 
+
                         // Insert the new row, returning the primary key value of the new row
                         long newRowId = db.insert(SaveDataContract.SaveDataEntry.TABLE_NAME, null, values);
-
                         if (newRowId != -1) {
+                            pagerAdapter.isNewRecord = true;
                             Log.v("row", "Inserted");
+
                             pagerAdapter.notifyDataSetChanged();
                             Log.v("Info", "Maps fragment is notified");
-                            tv_monthlytxt.setText(" Mortgage Calculation SAVED.");
                         } else
                             Log.v("row", "Not Inserted");
 
@@ -305,9 +319,8 @@ public class CalculationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        propId = (int)getArguments().get("propId");
 
-
+        final TextView tv_monthlyTxt =  calcView.findViewById(R.id.monthlyTxt);
         if(propId!=0) {
             SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
             SQLiteDatabase writableDb = mDbHelper.getWritableDatabase();
@@ -323,7 +336,7 @@ public class CalculationFragment extends Fragment {
                 final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
                 final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
                 final EditText et_apr = calcView.findViewById(R.id.apr);
-                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
+
 
 
 
@@ -366,14 +379,16 @@ public class CalculationFragment extends Fragment {
                 et_propPrice.setText(cursorProperties.getString(6));
                 et_downpmt.setText(cursorProperties.getString(7));
                 et_apr.setText(cursorProperties.getString(10));
-
+                isNewRecord = false;
                 //et_city.setText(cursorProperties.getString(3));
 
 
             }
 
         }
-
+    else if(isNewRecord){
+            tv_monthlyTxt.setText(" New Mortgage Calculation SAVED.");
+        }
 
     }
 

@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter{
 
         int propId = 0;
+        boolean isNewRecord = false;
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     //System.out.println("PropId"+propId);
                     Bundle args = new Bundle();
                     args.putInt("propId", propId);
+                    args.putBoolean("isNewRecord",isNewRecord);
                     CalculationFragment calcFragment =  new CalculationFragment();
                     calcFragment.setArguments(args);
                     return calcFragment;
