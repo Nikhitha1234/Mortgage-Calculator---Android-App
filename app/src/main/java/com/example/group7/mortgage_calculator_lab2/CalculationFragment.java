@@ -179,7 +179,8 @@ public class CalculationFragment extends Fragment {
                         ex.printStackTrace();
                     }
 
-                    calculate();
+                    if(!calculate())
+                        return;
 
                     if(p==null){
                         et_street.setError("Enter Proper Address");
