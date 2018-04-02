@@ -68,7 +68,7 @@ public class CalculationFragment extends Fragment {
         final EditText et_apr = calcView.findViewById(R.id.apr);
         final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
         final TextView tv_monthlytxt =  calcView.findViewById(R.id.monthlyTxt);
-
+        final RadioGroup radioGroup_terms = calcView.findViewById(R.id.rg_terms);
 
 
 
@@ -124,13 +124,23 @@ public class CalculationFragment extends Fragment {
                 propPrice=0;
                 dwnPmt=0;
 
-                RadioGroup radioGroup_terms = calcView.findViewById(R.id.rg_terms);
                 radioGroup_terms.check(R.id.radio_fifteen);
-
 
             }
         });
 
+
+        radioGroup_terms.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                if(checkedId==R.id.radio_thirty){
+                    radioTerms_value=30;
+                }
+                else radioTerms_value=15;
+            }
+        });
 
         final Button button_save =  calcView.findViewById(R.id.button_save);
         button_save.setOnClickListener(new View.OnClickListener() {
@@ -243,24 +253,6 @@ public class CalculationFragment extends Fragment {
     }
 
 
-    public void onRadioButtonClicked(View view) {
-        // Is the button now checked?
-        boolean checked = ((RadioButton) view).isChecked();
-
-        // Check which radio button was clicked
-        switch(view.getId()) {
-            case R.id.radio_fifteen:
-                if (checked)
-                    // Pirates are the best
-                    radioTerms_value =  15;
-                break;
-            case R.id.radio_thirty:
-                if (checked)
-                    radioTerms_value =  30;
-                break;
-        }
-    }
-
     public boolean calculate()
     {
         final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
@@ -297,8 +289,8 @@ public class CalculationFragment extends Fragment {
             apr = apr / 1200;
             double terms = radioTerms_value * 12;
             Log.v("apr", apr + "");
-            Log.v("xxx", Math.pow(1 + apr, radioTerms_value) + " ");
-            Log.v("thly", radioTerms_value + "");
+            Log.v("xxx", Math.pow(1 + apr, terms) + " ");
+            Log.v("thly", terms + "");
 
             loan_amt = propPrice - dwnPmt;
 
