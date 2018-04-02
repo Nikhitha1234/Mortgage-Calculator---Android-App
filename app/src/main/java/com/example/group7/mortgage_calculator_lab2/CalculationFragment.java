@@ -95,14 +95,35 @@ public class CalculationFragment extends Fragment {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
                 et_street.setText("");
+                et_propPrice.setError(null);
+
                 et_city.setText("");
+                et_city.setError(null);
+
                 et_zipcode.setText("");
+                et_zipcode.setError(null);
+
                 et_propPrice.setText("");
+                et_propPrice.setError(null);
+
                 et_downpmt.setText("");
+                et_downpmt.setError(null);
+
                 et_apr.setText("");
+
                 spinner.setSelection(0);
                 spinner1.setSelection(0);
-                //tv_monthly.setText("Waiting for Input ...");
+
+                tv_monthlytxt.setText("");
+                tv_monthly.setText("");
+
+
+                radioTerms_value=15;
+                monthly_amt=0;
+                loan_amt=0;
+                propPrice=0;
+                dwnPmt=0;
+
                 RadioGroup radioGroup_terms = calcView.findViewById(R.id.rg_terms);
                 radioGroup_terms.check(R.id.radio_fifteen);
 
@@ -198,6 +219,7 @@ public class CalculationFragment extends Fragment {
                             Log.v("row", "Inserted");
                             pagerAdapter.notifyDataSetChanged();
                             Log.v("Info", "Maps fragment is notified");
+                            tv_monthlytxt.setText(" Mortgage Calculation SAVED.");
                         } else
                             Log.v("row", "Not Inserted");
 
@@ -210,9 +232,11 @@ public class CalculationFragment extends Fragment {
                 // Code here executes on main thread after user presses button Calc
                 et_street.setError(null);
                 et_city.setError(null);
-                calculate();
-                tv_monthlytxt.setText("Your Monthly Payment is : ");
-                tv_monthly.setText(monthly_amt + "");
+                if(calculate())
+                {
+                    tv_monthlytxt.setText("Your Monthly Payment is : ");
+                    tv_monthly.setText(monthly_amt + "");
+                }
                 }
         });
         return calcView;
@@ -237,11 +261,8 @@ public class CalculationFragment extends Fragment {
         }
     }
 
-    public void calculate()
+    public boolean calculate()
     {
-        final EditText et_street = calcView.findViewById(R.id.street);
-        final EditText et_city = calcView.findViewById(R.id.city);
-        final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
         final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
         final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
         final EditText et_apr = calcView.findViewById(R.id.apr);
@@ -249,6 +270,7 @@ public class CalculationFragment extends Fragment {
 
         if(TextUtils.isEmpty(et_propPrice.getText().toString())){
             et_propPrice.setError("This field cannot be empty");
+            return false;
         }
         else {
             propPrice = Double.parseDouble(et_propPrice.getText().toString());
@@ -260,10 +282,13 @@ public class CalculationFragment extends Fragment {
 
         {
             et_downpmt.setError("Down Payment cannot be greater than property price");
+            return false;
         }
 
         if(TextUtils.isEmpty(et_apr.getText().toString())){
             et_apr.setError("This field cannot be empty");
+            return false;
+
         }
         else {
             apr = Double.parseDouble(et_apr.getText().toString());
@@ -278,8 +303,11 @@ public class CalculationFragment extends Fragment {
             loan_amt = propPrice - dwnPmt;
 
             monthly_amt = (loan_amt) * ((apr * (Math.pow(1 + apr, radioTerms_value))) / (Math.pow(1 + apr, radioTerms_value) - 1));
+
+            monthly_amt = (double)Math.round(monthly_amt * 100d) / 100d;
             Log.v("monthly", monthly_amt + "");
         }
+        return true;
     }
 
     @Override
