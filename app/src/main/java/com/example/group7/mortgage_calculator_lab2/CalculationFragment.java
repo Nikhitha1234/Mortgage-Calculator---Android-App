@@ -179,9 +179,8 @@ public class CalculationFragment extends Fragment {
                         ex.printStackTrace();
                     }
 
-                    if(!(TextUtils.isEmpty(et_propPrice.getText().toString())) || !(TextUtils.isEmpty(et_downpmt.getText().toString())) || !(TextUtils.isEmpty(et_apr.getText().toString()))){
-                        calculate();
-                    }
+                    calculate();
+
                     if(p==null){
                         et_street.setError("Enter Proper Address");
                         et_city.setError("Enter Proper Address");
