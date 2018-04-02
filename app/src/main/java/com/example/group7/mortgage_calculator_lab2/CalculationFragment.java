@@ -90,41 +90,6 @@ public class CalculationFragment extends Fragment {
         // Apply the adapter to the spinner
         spinner1.setAdapter(adapter1);
 
-
-//        propId = (int)getArguments().get("propId");
-//
-//
-//        if(propId!=0) {
-//            SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
-//            SQLiteDatabase writableDb = mDbHelper.getWritableDatabase();
-//            Cursor cursorProperties = writableDb.
-//                    rawQuery(
-//                            "SELECT * FROM " + SaveDataContract.SaveDataEntry.TABLE_NAME + " WHERE _ID = ?", new String[]{String.valueOf(propId)});
-//
-//            if (cursorProperties.moveToFirst()) {
-//
-//               final EditText et_street = calcView.findViewById(R.id.street);
-//                final EditText et_city = calcView.findViewById(R.id.city);
-//                final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
-//                final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
-//                final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
-//                final EditText et_apr = calcView.findViewById(R.id.apr);
-//                final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
-//
-//                Log.v("curs",cursorProperties.getString(2));
-//                et_propPrice.setText("1");
-//
-//                //et_city.setText(cursorProperties.getString(3));
-//
-//
-//            }
-//
-//        }
-
-
-
-
-
         final Button button_new =  calcView.findViewById(R.id.button_new);
         button_new.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -176,10 +141,14 @@ public class CalculationFragment extends Fragment {
 
                         ex.printStackTrace();
                     }
+                    if(!(TextUtils.isEmpty(et_propPrice.toString())) || !(TextUtils.isEmpty(et_downpmt.toString())) || !(TextUtils.isEmpty(et_apr.toString()))){
+                        calculate();
+                    }
                     if(p==null){
                         et_street.setError("Enter Proper Address");
                         et_city.setError("Enter Proper Address");
                     }
+
                     else if(propId>0){
 
                         SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
@@ -198,6 +167,7 @@ public class CalculationFragment extends Fragment {
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_LOANAMT, loan_amt);
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_APR, et_apr.getText().toString());
                         values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
+
                         db.update(SaveDataContract.SaveDataEntry.TABLE_NAME, values, "_id="+propId,null);
 
                     }
@@ -240,46 +210,11 @@ public class CalculationFragment extends Fragment {
                 // Code here executes on main thread after user presses button Calc
                 et_street.setError(null);
                 et_city.setError(null);
-
-                if(TextUtils.isEmpty(et_propPrice.getText().toString())){
-                    et_propPrice.setError("This field cannot be empty");
+                calculate();
+                tv_monthlytxt.setText("Your Monthly Payment is : ");
+                tv_monthly.setText(monthly_amt + "");
                 }
-                else {
-                    propPrice = Double.parseDouble(et_propPrice.getText().toString());
-                }
-                if(!(TextUtils.isEmpty(et_downpmt.getText().toString()))){
-                    dwnPmt = Double.parseDouble(et_downpmt.getText().toString());
-                }
-                if (dwnPmt > propPrice)
-
-                {
-                    et_downpmt.setError("Down Payment cannot be greater than property price");
-                }
-
-                if(TextUtils.isEmpty(et_apr.getText().toString())){
-                    et_apr.setError("This field cannot be empty");
-                }
-                else {
-                    apr = Double.parseDouble(et_apr.getText().toString());
-                }
-                if(!(TextUtils.isEmpty(et_propPrice.getText().toString())) &&  !(TextUtils.isEmpty(et_apr.getText().toString())) && propPrice>=dwnPmt) {
-                    apr = apr / 100;
-                    radioTerms_value = radioTerms_value * 12;
-                    Log.v("apr", apr + "");
-                    Log.v("xxx", Math.pow(1 + apr, radioTerms_value) + " ");
-                    Log.v("thly", radioTerms_value + "");
-
-                    loan_amt = propPrice - dwnPmt;
-
-                    monthly_amt = (loan_amt) * ((apr * (Math.pow(1 + apr, radioTerms_value))) / (Math.pow(1 + apr, radioTerms_value) - 1));
-                    Log.v("monthly", monthly_amt + "");
-                    tv_monthlytxt.setText("Your Monthly Payment is : ");
-
-                    tv_monthly.setText(monthly_amt + "");
-                }
-            }
         });
-
         return calcView;
     }
 
@@ -299,6 +234,51 @@ public class CalculationFragment extends Fragment {
                 if (checked)
                     radioTerms_value =  30;
                 break;
+        }
+    }
+
+    public void calculate()
+    {
+        final EditText et_street = calcView.findViewById(R.id.street);
+        final EditText et_city = calcView.findViewById(R.id.city);
+        final EditText et_zipcode= calcView.findViewById(R.id.zipcode);
+        final EditText et_propPrice = calcView.findViewById(R.id.propPrice);
+        final EditText et_downpmt = calcView.findViewById(R.id.downPmt);
+        final EditText et_apr = calcView.findViewById(R.id.apr);
+        final TextView tv_monthly =  calcView.findViewById(R.id.monthly);
+
+        if(TextUtils.isEmpty(et_propPrice.getText().toString())){
+            et_propPrice.setError("This field cannot be empty");
+        }
+        else {
+            propPrice = Double.parseDouble(et_propPrice.getText().toString());
+        }
+        if(!(TextUtils.isEmpty(et_downpmt.getText().toString()))){
+            dwnPmt = Double.parseDouble(et_downpmt.getText().toString());
+        }
+        if (dwnPmt > propPrice)
+
+        {
+            et_downpmt.setError("Down Payment cannot be greater than property price");
+        }
+
+        if(TextUtils.isEmpty(et_apr.getText().toString())){
+            et_apr.setError("This field cannot be empty");
+        }
+        else {
+            apr = Double.parseDouble(et_apr.getText().toString());
+        }
+        if(!(TextUtils.isEmpty(et_propPrice.getText().toString())) &&  !(TextUtils.isEmpty(et_apr.getText().toString())) && propPrice>=dwnPmt) {
+            apr = apr / 100;
+            radioTerms_value = radioTerms_value * 12;
+            Log.v("apr", apr + "");
+            Log.v("xxx", Math.pow(1 + apr, radioTerms_value) + " ");
+            Log.v("thly", radioTerms_value + "");
+
+            loan_amt = propPrice - dwnPmt;
+
+            monthly_amt = (loan_amt) * ((apr * (Math.pow(1 + apr, radioTerms_value))) / (Math.pow(1 + apr, radioTerms_value) - 1));
+            Log.v("monthly", monthly_amt + "");
         }
     }
 
@@ -376,4 +356,6 @@ public class CalculationFragment extends Fragment {
 
 
     }
+
+
 }
