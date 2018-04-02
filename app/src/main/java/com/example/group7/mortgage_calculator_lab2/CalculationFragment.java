@@ -180,7 +180,29 @@ public class CalculationFragment extends Fragment {
                         et_street.setError("Enter Proper Address");
                         et_city.setError("Enter Proper Address");
                     }
-                    else {
+                    else if(propId>0){
+
+                        SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
+                        // Gets the data repository in write mode
+                        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+                        ContentValues values = new ContentValues();
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPTYPE, spinner.getSelectedItem().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_STREET, et_street.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_CITY, et_city.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_STATE, spinner1.getSelectedItem().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_ZIPCODE, et_zipcode.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_PROPRICE, et_propPrice.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_DWNPMT, et_downpmt.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_TERMS,radioTerms_value);
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_LOANAMT, loan_amt);
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_APR, et_apr.getText().toString());
+                        values.put(SaveDataContract.SaveDataEntry.COLUMN_NAME_MPMT, monthly_amt);
+                        db.update(SaveDataContract.SaveDataEntry.TABLE_NAME, values, "_id="+propId,null);
+
+                    }
+
+                    else{
                         SaveDataHelper mDbHelper = new SaveDataHelper(getActivity().getApplicationContext());
                         // Gets the data repository in write mode
                         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -336,7 +358,6 @@ public class CalculationFragment extends Fragment {
 
                 Log.v("curs",cursorProperties.getString(1));
                 Log.v("curs",cursorProperties.getString(0));
-                Log.v("curs", String.valueOf(cursorProperties));
 
                 et_propPrice.setText("1");
                 et_city.setText(cursorProperties.getString(3));
